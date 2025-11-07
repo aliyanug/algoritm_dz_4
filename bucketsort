@@ -1,0 +1,75 @@
+def bucket_sort(arr):
+    """
+    Реализация блочной сортировки для чисел в диапазоне [0, 1)
+    """
+    # 1. Создаем пустые корзины
+    n = len(arr)
+    buckets = [[] for _ in range(n)]
+    
+    # 2. Распределяем элементы по корзинам
+    for num in arr:
+        # Вычисляем индекс корзины для текущего элемента
+        bucket_index = int(num * n)
+        buckets[bucket_index].append(num)
+    
+    # 3. Сортируем каждую корзину (используем встроенную сортировку)
+    for bucket in buckets:
+        bucket.sort()
+    
+    # 4. Объединяем отсортированные корзины
+    sorted_arr = []
+    for bucket in buckets:
+        sorted_arr.extend(bucket)
+    
+    return sorted_arr
+
+def bucket_sort_general(arr, min_val, max_val):
+    """
+    Общая реализация блочной сортировки для произвольного диапазона чисел
+    """
+    n = len(arr)
+    if n <= 1:
+        return arr
+    
+    # 1. Создаем пустые корзины
+    num_buckets = n
+    buckets = [[] for _ in range(num_buckets)]
+    
+    # 2. Распределяем элементы по корзинам
+    range_val = max_val - min_val
+    for num in arr:
+        # Нормализуем значение и вычисляем индекс корзины
+        normalized = (num - min_val) / range_val
+        bucket_index = int(normalized * (num_buckets - 1))
+        buckets[bucket_index].append(num)
+    
+    # 3. Сортируем каждую корзину
+    for i in range(num_buckets):
+        buckets[i].sort()  # Можно использовать другой алгоритм сортировки
+    
+    # 4. Объединяем отсортированные корзины
+    sorted_arr = []
+    for bucket in buckets:
+        sorted_arr.extend(bucket)
+    
+    return sorted_arr
+
+# Демонстрация работы алгоритма
+if __name__ == "__main__":
+    # Тест 1: числа в диапазоне [0, 1)
+    print("Тест 1: Блочная сортировка для чисел [0, 1)")
+    test_arr1 = [0.42, 0.32, 0.33, 0.52, 0.37, 0.47, 0.51]
+    print(f"Исходный массив: {test_arr1}")
+    sorted_arr1 = bucket_sort(test_arr1)
+    print(f"Отсортированный массив: {sorted_arr1}")
+    print()
+    
+    # Тест 2: общий случай
+    print("Тест 2: Общая блочная сортировка")
+    test_arr2 = [29, 25, 3, 49, 9, 37, 21, 43]
+    min_val = min(test_arr2)
+    max_val = max(test_arr2)
+    print(f"Исходный массив: {test_arr2}")
+    print(f"Диапазон: [{min_val}, {max_val}]")
+    sorted_arr2 = bucket_sort_general(test_arr2, min_val, max_val)
+    print(f"Отсортированный массив: {sorted_arr2}")
